@@ -12,6 +12,7 @@ env:
   AZURE_FUNCTIONAPP_NAME: api-password-purgatory
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/PasswordPurgatory/PasswordPurgatory.ApiFunction/'
   DOTNET_VERSION: '6.0'
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true #needed for Azure/functions-action
 
 jobs:
   build-and-deploy:
