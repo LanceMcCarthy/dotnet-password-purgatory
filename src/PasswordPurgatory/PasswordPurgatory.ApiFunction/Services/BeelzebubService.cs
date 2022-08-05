@@ -9,7 +9,12 @@ internal class BeelzebubService
 {
     private static string pwd;
 
-    public Check Infuriate(string password)
+    public BeelzebubService(string password)
+    {
+        pwd = password;
+    }
+
+    public Check Infuriate()
     {
         foreach (var check in checks)
         {

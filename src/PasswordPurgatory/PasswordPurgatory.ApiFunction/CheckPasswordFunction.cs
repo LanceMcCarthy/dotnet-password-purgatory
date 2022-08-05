@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using PasswordPurgatory.ApiFunction.Services;
 using System.IO;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace PasswordPurgatory.ApiFunction
 {
@@ -18,16 +19,20 @@ namespace PasswordPurgatory.ApiFunction
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-
+            
             string password = req.Query["password"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            
+            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             password ??= data?.name;
 
-            var beelzebub = new BeelzebubService();
+            if (string.IsNullOrEmpty(password))
+                return new BadRequestErrorMessageResult("You must send a parameter value for 'password' in the query.");
 
-            var checkResult = beelzebub.Infuriate(password);
+            var beelzebub = new BeelzebubService(password);
+
+            // Go through all the rules, from lowest to most infuriating.
+            var checkResult = beelzebub.Infuriate();
             
             var responseMessage = checkResult != null 
                 ? checkResult.Message 
