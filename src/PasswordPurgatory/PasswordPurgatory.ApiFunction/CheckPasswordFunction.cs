@@ -58,7 +58,7 @@ namespace PasswordPurgatory.ApiFunction
                 },
                 new()
                 {
-                    PasswordIsValid = password.Length < 8,
+                    PasswordIsValid = password.Length >= 8,
                     Message = "Password must be at least 8 characters long",
                     InfuriationLevel = InfuriationLevel.Low
                 },
@@ -70,7 +70,7 @@ namespace PasswordPurgatory.ApiFunction
                 },
                 new()
                 {
-                    PasswordIsValid = password.Length > 20,
+                    PasswordIsValid = password.Length > 28, //if longer than 28
                     Message = $"Password must not be {password.Length} characters long'",
                     InfuriationLevel = InfuriationLevel.Moderate
                 },
