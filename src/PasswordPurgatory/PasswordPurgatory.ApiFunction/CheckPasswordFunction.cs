@@ -58,12 +58,6 @@ namespace PasswordPurgatory.ApiFunction
                 },
                 new()
                 {
-                    PasswordIsValid = password.Length == 0,
-                    Message = "Password cannot be empty",
-                    InfuriationLevel = InfuriationLevel.Low
-                },
-                new()
-                {
                     PasswordIsValid = password.Length < 8,
                     Message = "Password must be at least 8 characters long",
                     InfuriationLevel = InfuriationLevel.Low
