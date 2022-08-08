@@ -32,7 +32,9 @@ namespace PasswordPurgatory.ApiFunction
 
             if (string.IsNullOrEmpty(password))
                 return new BadRequestErrorMessageResult("You must send a parameter value for 'password' in the query.");
-            
+
+            log.LogInformation("Processing password strength...");
+
             // List of password checks the increase in ridiculousness and complexity
             var checks = new List<Check>
             {
@@ -173,15 +175,24 @@ namespace PasswordPurgatory.ApiFunction
             // Initialize the string with a success message... but the user is never going to reach it :D
             var responseMessage = "Congratulations! Take a screenshot of this message and share it to https://www.twitter.com/@l_anceM for the recognition you deserve.";
 
-            // Go through the checks and return the first failure (they get more ridiculous as they get farther into the checks
-            foreach (var check in checks.Where(check => !check.PasswordIsValid))
+            log.LogInformation($"Password: {password}");
+
+            try
             {
-                responseMessage = check.Message;
-                
-                // Filtered on server-side for any accidental PII.
-                log.LogMetric("Check", checks.IndexOf(check), new Dictionary<string, object> { { "Message", check.Message }, { "Password", password } });
-                
-                break;
+                // Go through the checks and return the first failure (they get more ridiculous as they get farther into the checks
+                foreach (var check in checks.Where(check => !check.PasswordIsValid))
+                {
+                    responseMessage = check.Message;
+
+                    log.LogInformation($"Check #{checks.IndexOf(check)} - {check.Message}");
+
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex, "Check Loop Error");
+                throw;
             }
 
             return new OkObjectResult(responseMessage);
