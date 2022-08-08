@@ -23,7 +23,7 @@ namespace PasswordPurgatory.ApiFunction
             ILogger log)
         {
             log.LogInformation("Processing password strength...");
-
+            
             string password = req.Query["password"];
 
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -32,7 +32,7 @@ namespace PasswordPurgatory.ApiFunction
 
             if (string.IsNullOrEmpty(password))
                 return new BadRequestErrorMessageResult("You must send a parameter value for 'password' in the query.");
-
+            
             // List of password checks the increase in ridiculousness and complexity
             var checks = new List<Check>
             {
@@ -116,7 +116,7 @@ namespace PasswordPurgatory.ApiFunction
                 },
                 new()
                 {
-                    PasswordIsValid = !IsDivisibleByThree(password),
+                    PasswordIsValid = !IsDivisibleByThree(password, log),
                     Message = "Password when stripped of non-numeric characters must be a number divisible by 3",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
@@ -171,12 +171,16 @@ namespace PasswordPurgatory.ApiFunction
             };
 
             // Initialize the string with a success message... but the user is never going to reach it :D
-            string responseMessage = "Congratulations! Take a screenshot of this message and share it to https://www.twitter.com/@l_anceM for the recognition you deserve.";
+            var responseMessage = "Congratulations! Take a screenshot of this message and share it to https://www.twitter.com/@l_anceM for the recognition you deserve.";
 
             // Go through the checks and return the first failure (they get more ridiculous as they get farther into the checks
             foreach (var check in checks.Where(check => !check.PasswordIsValid))
             {
                 responseMessage = check.Message;
+                
+                // Filtered on server-side for any accidental PII.
+                log.LogMetric("Check", checks.IndexOf(check), new Dictionary<string, object> { { "Message", check.Message }, { "Password", password } });
+                
                 break;
             }
 
@@ -184,13 +188,21 @@ namespace PasswordPurgatory.ApiFunction
         }
 
 
-        private static bool IsDivisibleByThree(string pwd)
+        private static bool IsDivisibleByThree(string pwd, ILogger log)
         {
-            var numbersOnly = new string(pwd.Where(char.IsDigit).ToArray());
+            try
+            {
+                var numbersOnly = new string(pwd.Where(char.IsDigit).ToArray());
+            
+                return numbersOnly.Sum(Convert.ToInt32) % 3 == 0;
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex,"DivideByThreeError");
 
-            int total = numbersOnly.Sum(Convert.ToInt32);
-
-            return total % 3 == 0;
+                // Just in case there's a problem with my logic/math, I don't want to ruin the fun... so lets keep moving on.
+                return true;
+            }
         }
     }
 }
