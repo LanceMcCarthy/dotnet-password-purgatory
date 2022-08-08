@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace PasswordPurgatory.ApiFunction.Models;
 
-internal class Check
+public class Check
 {
     public string Password { get; set; }
 

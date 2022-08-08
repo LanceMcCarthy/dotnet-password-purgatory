@@ -1,6 +1,6 @@
 namespace PasswordPurgatory.ApiFunction.Models;
 
-internal enum InfuriationLevel
+public enum InfuriationLevel
 {
     Ridiculous,
     High,
