@@ -70,97 +70,97 @@ namespace PasswordPurgatory.ApiFunction
                 },
                 new()
                 {
-                    PasswordIsValid = password.Length > 28, //if longer than 28
-                    Message = $"Password must not be {password.Length} characters long'",
+                    PasswordIsValid = password.Length < 28,
+                    Message = $"Password must be less than {password.Length} characters long.",
                     InfuriationLevel = InfuriationLevel.Moderate
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/dog$/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/dog$/").IsMatch(password),
                     Message = "Password must end with dog",
                     InfuriationLevel = InfuriationLevel.Moderate
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/^cat/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/^cat/").IsMatch(password),
                     Message = "Password must start with cat",
                     InfuriationLevel = InfuriationLevel.Moderate
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/Homer|Marge|Bart|Lisa|Maggie/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/Homer|Marge|Bart|Lisa|Maggie/").IsMatch(password),
                     Message = "Password must contain at least 1 primary Simpsons family character",
                     InfuriationLevel = InfuriationLevel.High
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/Peter|Lois|Chris|Meg|Brian|Stewie/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/Peter|Lois|Chris|Meg|Brian|Stewie/").IsMatch(password),
                     Message = "Password must contain at least 1 primary Griffin family character",
                     InfuriationLevel = InfuriationLevel.High
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/:‑\)|:\)|:\-\]|:\]|:>|:\-\}|:\}|:o\)\)|:\^\)|=\]|=\)|:\]|:\->|:>|8\-\)|:\-\}|:\}|:o\)|:\^\)|=\]|=\)|:‑D|:D|B\^D|:‑\(|:\(|:‑<|:<|:‑\[|:\[|:\-\|\||>:\[|:\{|:\(|;\(|:\'‑\(|:\'\(|:=\(|:\'‑\)|:\'\)|:‑O|:O|:‑o|:o|:\-0|>:O|>:3|;‑\)|;\)|;‑\]|;\^\)|:‑P|:\-\/|:\/|:‑\.|>:|>:\/|:|:‑\||:\||>:‑\)|>:\)|\}:‑\)|>;‑\)|>;\)|>:3|\|;‑\)|:‑J|<:‑\||~:>/,").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/:‑\)|:\)|:\-\]|:\]|:>|:\-\}|:\}|:o\)\)|:\^\)|=\]|=\)|:\]|:\->|:>|8\-\)|:\-\}|:\}|:o\)|:\^\)|=\]|=\)|:‑D|:D|B\^D|:‑\(|:\(|:‑<|:<|:‑\[|:\[|:\-\|\||>:\[|:\{|:\(|;\(|:\'‑\(|:\'\(|:=\(|:\'‑\)|:\'\)|:‑O|:O|:‑o|:o|:\-0|>:O|>:3|;‑\)|;\)|;‑\]|;\^\)|:‑P|:\-\/|:\/|:‑\.|>:|>:\/|:|:‑\||:\||>:‑\)|>:\)|\}:‑\)|>;‑\)|>;\)|>:3|\|;‑\)|:‑J|<:‑\||~:>/,").IsMatch(password),
                     Message = "Password must contain at least one emoticon",
                     InfuriationLevel = InfuriationLevel.High
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/bobcat|Lynx rufus|L. rufus/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/bobcat|Lynx rufus|L. rufus/").IsMatch(password),
                     Message = "Password must contain a bobcat",
                     InfuriationLevel = InfuriationLevel.High
                 },
                 new()
                 {
-                    PasswordIsValid = !IsDivisibleByThree(password, log),
+                    PasswordIsValid = IsDivisibleByThree(password, log),
                     Message = "Password when stripped of non-numeric characters must be a number divisible by 3",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/[ÄÜÖ\u1e9e]/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/[ÄÜÖ\u1e9e]/").IsMatch(password),
                     Message = "Password must contain at least one upper case German Umlaut",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/Luna|Deimos|Phobos|Amalthea|Callisto|Europa|Ganymede|Io|Dione|Enceladus|Hyperion|Iapetus|Mimas|Phoebe|Rhea|Tethys|Titan|Ariel|Miranda|Oberon|Titania|Umbriel|Nereid|Triton|Charon|Himalia|Carme|Ananke|Adrastea|Elara|Adrastea|Elara|Epimetheus|Callirrhoe|Kalyke|Thebe|Methone|Kiviuq|Ijiraq|Paaliaq|Albiorix|Erriapus|Pallene|Polydeuces|Bestla|Daphnis|Despina|Puck|Carpo|Pasiphae|Themisto|Cyllene|Isonoe|Harpalyke|Hermippe|Iocaste|Chaldene|Euporie/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/Luna|Deimos|Phobos|Amalthea|Callisto|Europa|Ganymede|Io|Dione|Enceladus|Hyperion|Iapetus|Mimas|Phoebe|Rhea|Tethys|Titan|Ariel|Miranda|Oberon|Titania|Umbriel|Nereid|Triton|Charon|Himalia|Carme|Ananke|Adrastea|Elara|Adrastea|Elara|Epimetheus|Callirrhoe|Kalyke|Thebe|Methone|Kiviuq|Ijiraq|Paaliaq|Albiorix|Erriapus|Pallene|Polydeuces|Bestla|Daphnis|Despina|Puck|Carpo|Pasiphae|Themisto|Cyllene|Isonoe|Harpalyke|Hermippe|Iocaste|Chaldene|Euporie/").IsMatch(password),
                     Message = "Password must contain at least one named solarian planetary satellite",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/(?:[^1234569]*[1234569]){3}[^1234569]*/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/(?:[^1234569]*[1234569]){3}[^1234569]*/").IsMatch(password),
                     Message = "Password must contain at least 3 digits from the first 10 decimal places of pi",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/(?=^[A-Za-z0-9]+$)(.)+.*\1.*/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/(?=^[A-Za-z0-9]+$)(.)+.*\1.*/").IsMatch(password),
                     Message = "Password must contain only unique characters.",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/Password\smust\scontain/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/Password\smust\scontain/").IsMatch(password),
                     Message = "Password must contain 'Password must contain'",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/[ÅåÄäÖöÆæØø]/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/[ÅåÄäÖöÆæØø]/").IsMatch(password),
                     Message = "Password must contain at least 1 Nordic character",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/[\u0370-\u03ff\u1f00-\u1fff]/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/[\u0370-\u03ff\u1f00-\u1fff]/").IsMatch(password),
                     Message = "Password must contain at least 1 Greek character",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 },
                 new()
                 {
-                    PasswordIsValid = !new Regex(@"/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/").IsMatch(password),
+                    PasswordIsValid = new Regex(@"/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/").IsMatch(password),
                     Message = "Password must be a palindrome.",
                     InfuriationLevel = InfuriationLevel.Ridiculous
                 }
