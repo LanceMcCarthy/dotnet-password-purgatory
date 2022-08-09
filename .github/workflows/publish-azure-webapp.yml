@@ -13,7 +13,7 @@ env:
   AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.PasswordPurgatoryWeb_b8f5 }}
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
-  WORKING_DIRECTORY: PasswordPurgatory.Web
+  CSPROJ_PATH: src/PasswordPurgatory/PasswordPurgatory.Web/PasswordPurgatory.Web.csproj
   TELERIK_NUGET_KEY: ${{ secrets.TELERIK_NUGET_KEY }}
 
 jobs:
@@ -28,16 +28,16 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}" --configfile ${{ env.NugetConfigPath }}
+      run: dotnet restore "${{ env.CSPROJ_PATH }}" --configfile ${{ env.NugetConfigPath }}
 
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build "${{ env.CSPROJ_PATH }}" --configuration ${{ env.CONFIGURATION }} --no-restore
 
     - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+      run: dotnet test "${{ env.CSPROJ_PATH }}" --no-build
 
     - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+      run: dotnet publish "${{ env.CSPROJ_PATH }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
