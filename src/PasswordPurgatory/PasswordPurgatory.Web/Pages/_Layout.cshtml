@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace PasswordPurgatory.Web.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Partnership Registration</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />    
+    	<link href="https://blazor.cdn.telerik.com/blazor/3.5.0/kendo-theme-bootstrap/swatches/bootstrap-main.css" rel="stylesheet" type="text/css" />
+	<script src="https://blazor.cdn.telerik.com/blazor/3.5.0/telerik-blazor.min.js" defer></script>
+
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body>
+    @RenderBody()
+
+    <div id="blazor-error-ui" class="text-center">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <div>
+            <a href class="reload"><span class="k-icon k-i-reload"></span> Reload</a>
+        </div>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>
