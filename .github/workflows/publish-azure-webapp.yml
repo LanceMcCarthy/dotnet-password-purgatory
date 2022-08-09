@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - 'src/PasswordPurgatory/PasswordPurgatory.ApiFunction/**/*' 
+      - 'src/PasswordPurgatory/PasswordPurgatory.Web/**/*' 
       - '.github/workflows/publish-azure-webapp.yml'
 
 env:
@@ -14,6 +14,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: PasswordPurgatory.Web
+  TELERIK_NUGET_KEY: ${{ secrets.TELERIK_NUGET_KEY }}
 
 jobs:
   build-and-deploy:
@@ -27,7 +28,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
     - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}" --configfile ${{ env.NugetConfigPath }}
 
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
