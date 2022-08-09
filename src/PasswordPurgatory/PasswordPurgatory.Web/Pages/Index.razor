@@ -1,0 +1,124 @@
+﻿@page "/"
+
+@inject IHttpClientFactory ClientFactory
+@using PasswordPurgatory.Web.Models
+
+<style>
+    .myForm {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+</style>
+
+<h2 class="myForm">Private Partnership</h2>
+
+<p class="myForm">If you landed on this page, it means I have invited you to a lucrative one-on-one partnership opportunity with you.'</p>
+
+<p class="myForm">So that you can access our one-on-one chat, please create a username and password.'</p>
+
+<br/>
+<br/>
+
+<EditForm Model="@CredentialsModel" OnValidSubmit="@HandleValidSubmit" class="myForm">
+    <DataAnnotationsValidator />
+    
+    <div>
+        <TelerikTextBox PlaceHolder="Create a username"
+                        Width="250px"
+                        @bind-Value="@CredentialsModel.Username"></TelerikTextBox>
+    </div>
+    
+    <br/>
+    
+    <div>
+        <TelerikTextBox PlaceHolder="Enter Password"
+                        Password="HidePassword"
+                        Width="250px"
+                        @bind-Value="@CredentialsModel.Password"></TelerikTextBox>
+        <TelerikButton OnClick="@RevealPassword"
+                       Icon="unlock"
+                       ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                       ButtonType="ButtonType.Button"></TelerikButton>
+    </div>
+    
+    <br/>
+    
+    <div>
+        <TelerikTextBox Password="@HideConfirmPassword"
+                        PlaceHolder="Re-Enter Your Password"
+                        Width="250px"
+                        @bind-Value="@CredentialsModel.ConfirmPassword"></TelerikTextBox>
+        <TelerikButton OnClick="@RevealConfirmPassword"
+                       Icon="unlock"
+                       ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                       ButtonType="ButtonType.Button"></TelerikButton>
+    </div>
+    
+    <br/>
+    
+    <div class="k-validation-summary k-messagebox k-messagebox-error p-0" role="alert">
+        <ValidationSummary />
+    </div>
+    
+    <br/>
+
+    <div>
+        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                       ButtonType="@ButtonType.Submit">Submit</TelerikButton>
+    </div>
+</EditForm>
+
+<p class="k-messagebox-error">@ResultMessage</p>
+
+@code {
+    private HttpClient? client;
+    public PasswordModel CredentialsModel { get; set; } = new();
+    
+    public bool HidePassword { get; set; } = true;
+    public bool HideConfirmPassword { get; set; } = true;
+    public bool IsSubmitButtonEnabled { get; set; }
+    public string? ResultMessage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        client = ClientFactory.CreateClient();
+    }
+
+    public async Task RevealPassword()
+    {
+        HidePassword = false;
+        await Task.Delay(700);
+        HidePassword = true;
+    }
+
+    public async Task RevealConfirmPassword()
+    {
+        HideConfirmPassword = false;
+        await Task.Delay(700);
+        HideConfirmPassword = true;
+    }
+
+    public async Task HandleValidSubmit()
+    {
+        if (client == null)
+        {
+            ResultMessage = "The HttpClient was null. Contact the site developers to report this issue.";
+            return;
+        }
+
+        ResultMessage = "Preparing request...";
+
+        var endpoint = $"https://api-password-purgatory.azurewebsites.net/api/CheckPassword?code=SsCDe7VtrLeGdRdk74LUb2ssN5nawm6zNRJZu1J2TxV3AzFuG7P9TA==&password={CredentialsModel.Password}";
+
+        ResultMessage = "Submitting secure form...";
+
+        var response = await client.GetStringAsync(endpoint);
+
+        ResultMessage = !string.IsNullOrEmpty(response)
+            ? response
+            : "There was a problem communicating with the account service. This is likely a temporary issue, please try again in a few seconds.";
+
+        StateHasChanged();
+    }
+}
