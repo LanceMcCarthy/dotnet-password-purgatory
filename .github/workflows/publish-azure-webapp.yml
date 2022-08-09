@@ -1,4 +1,4 @@
-name: Build and deploy PasswordPurgatory Web
+name: Publish Azure Web App
 on:
   push:
     branches:
