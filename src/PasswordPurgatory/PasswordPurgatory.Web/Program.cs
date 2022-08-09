@@ -1,6 +1,4 @@
-﻿const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -8,6 +6,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddTelerikBlazor();
 builder.Services.AddHttpClient();
 
+//const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 //builder.Services.AddCors(options =>
 //{
 //    options.AddPolicy(name: myAllowSpecificOrigins,
