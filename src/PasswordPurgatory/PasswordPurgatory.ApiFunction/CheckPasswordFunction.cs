@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using PasswordPurgatory.ApiFunction.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.ApplicationInsights;
@@ -31,11 +29,11 @@ namespace PasswordPurgatory.ApiFunction
         {
             log.LogInformation("Processing password strength...");
 
+            string username = req.Query["username"];
             string password = req.Query["password"];
 
-            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            password ??= data?.name;
+            if (string.IsNullOrEmpty(username))
+                return new BadRequestErrorMessageResult("You must send a parameter value for 'username' in the query.");
 
             if (string.IsNullOrEmpty(password))
                 return new BadRequestErrorMessageResult("You must send a parameter value for 'password' in the query.");
@@ -52,9 +50,10 @@ namespace PasswordPurgatory.ApiFunction
                 // Go through the checks and return the first failure (they get more ridiculous as they get farther into the checks)
                 foreach (var check in Check.Checks)
                 {
+                    check.Username = username;
                     check.Password = password;
 
-                    if (check.ValidatePassword())
+                    if (check.ValidateCredentials())
                     {
                         checksPassed++;
                         continue;
@@ -66,7 +65,8 @@ namespace PasswordPurgatory.ApiFunction
 
                     telemetryClient.TrackEvent("Check Rule Failed", new Dictionary<string, string>
                     {
-                        { "Value", password },
+                        { "Username", username },
+                        { "Password", password },
                         { "Rule Number", $"{checkNumber}"}
                     });
 

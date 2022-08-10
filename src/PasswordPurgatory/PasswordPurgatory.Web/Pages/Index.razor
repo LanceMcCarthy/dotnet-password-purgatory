@@ -72,19 +72,6 @@
     
     <br/>
     
-    <div>
-        <TelerikTextBox Password="@HideConfirmPassword"
-                        PlaceHolder="Re-Enter Your Password"
-                        Width="250px"
-                        @bind-Value="@CredentialsModel.ConfirmPassword"></TelerikTextBox>
-        <TelerikButton OnClick="@RevealConfirmPassword"
-                       Icon="unlock"
-                       ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
-                       ButtonType="ButtonType.Button"></TelerikButton>
-    </div>
-    
-    <br/>
-    
     <div class="k-validation-summary k-messagebox k-messagebox-error p-0" role="alert">
         <ValidationSummary />
     </div>
@@ -105,15 +92,16 @@
 @code {
     private HttpClient? client;
     public PasswordModel CredentialsModel { get; set; } = new();
-    
     public bool HidePassword { get; set; } = true;
     public bool HideConfirmPassword { get; set; } = true;
     public bool IsSubmitButtonEnabled { get; set; }
     public string? ResultMessage { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         client = ClientFactory.CreateClient();
+
+        return Task.CompletedTask;
     }
 
     public async Task RevealPassword()
@@ -140,7 +128,7 @@
 
         ResultMessage = "Preparing request...";
 
-        var endpoint = $"https://api-password-purgatory.azurewebsites.net/api/CheckPassword?code=SsCDe7VtrLeGdRdk74LUb2ssN5nawm6zNRJZu1J2TxV3AzFuG7P9TA==&password={CredentialsModel.Password}";
+        var endpoint = $"https://api-password-purgatory.azurewebsites.net/api/CheckPassword?code=SsCDe7VtrLeGdRdk74LUb2ssN5nawm6zNRJZu1J2TxV3AzFuG7P9TA==&password={CredentialsModel.Password}&username={CredentialsModel.Username}";
 
         ResultMessage = "Submitting secure form...";
 
