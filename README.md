@@ -6,8 +6,7 @@ This is Troy Hunt's [Password Purgatory](https://www.troyhunt.com/building-passw
 
 Build Statuses
 
-| Project   | Status | Link |
-|-----------|--------|------|
-| API       | [![Publish Azure Function](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-functions.yml/badge.svg)](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-functions.yml) |  n/a   |
-| Front End |  [![Publish Azure Web App](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-webapp.yml/badge.svg)](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-webapp.yml)   | [https://partnership.dvlup.com](https://partnership.dvlup.com) |
-| Logger    |  n/a   |  n/a   |
+| Project           | Status     |
+|-------------------|------------|
+| API               | [![Publish Azure Function](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-functions.yml/badge.svg)](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-functions.yml) |
+| Blazor App: [https://partnership.dvlup.com](https://partnership.dvlup.com) |  [![Publish Azure Web App](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-webapp.yml/badge.svg)](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-webapp.yml)   |
