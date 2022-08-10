@@ -28,19 +28,7 @@ public class Check
         {
             Message = "Username cannot just be empty spaces.",
             InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => string.IsNullOrWhiteSpace(un) || string.IsNullOrEmpty(un)
-        },
-        new()
-        {
-            Message = "Password must contain at least 1 number",
-            InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/\d+/").Success
-        },
-        new()
-        {
-            Message = "Password must not end in '!'",
-            InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/!$/").Success
+            Validator = (un, pwd) => !string.IsNullOrWhiteSpace(un) || !string.IsNullOrEmpty(un)
         },
         new()
         {
@@ -70,6 +58,18 @@ public class Check
                 
                 return true;
             }
+        },
+        new()
+        {
+            Message = "Password must contain at least 1 number",
+            InfuriationLevel = InfuriationLevel.Low,
+            Validator = (un, pwd) => !Regex.Match(pwd, @"/\d+/").Success
+        },
+        new()
+        {
+            Message = "Password must not end in '!'",
+            InfuriationLevel = InfuriationLevel.Low,
+            Validator = (un, pwd) => !Regex.Match(pwd, @"/!$/").Success
         },
         new()
         {
