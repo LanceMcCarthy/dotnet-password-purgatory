@@ -75,13 +75,13 @@ public class Check
         {
             Message = "Password must contain at least 1 upper case character",
             InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/[A-Z]/").Success
+            Validator = (un, pwd) => !Regex.Match(pwd, @"/[A-Z]/").Success
         },
         new()
         {
             Message = "Password must contain at least 1 lower case character",
             InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/[a-z]/").Success
+            Validator = (un, pwd) => !Regex.Match(pwd, @"/[a-z]/").Success
         },
         new()
         {
