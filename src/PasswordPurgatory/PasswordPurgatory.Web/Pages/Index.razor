@@ -14,19 +14,36 @@
 
     p.k-messagebox-error {
         text-align: center;
+        word-wrap: break-word;
+        margin-left: 10px;
+        margin-right: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        display: flex;
+        align-content: center;
+        flex-wrap: wrap;
     }
     
     ul.validation-errors {
         padding: 0.375rem 4rem;
         margin-bottom: 0;
-        }
+    }
+
+    p {
+        word-wrap: break-word;
+        margin-left: 10px;
+        margin-right: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        display: flex;
+        align-content: center;
+        flex-wrap: wrap;
+    }
 </style>
 
-<h2 class="myForm">Private Partnership</h2>
+<h3 class="myForm">Congratulations!</h3>
 
-<p class="myForm">If you landed on this page, it means I have invited you to a lucrative one-on-one partnership opportunity with you.'</p>
-
-<p class="myForm">So that you can access our one-on-one chat, please create a username and password.'</p>
+<p>If you landed on this page, it means I have invited you to a lucrative one-on-one partnership opportunity! To access our one-on-one chat and start our partnership, please create a username and password.</p>
 
 <br/>
 <br/>
@@ -83,6 +100,7 @@
 <br/>
 
 <p class="k-messagebox-error">@ResultMessage</p>
+
 
 @code {
     private HttpClient? client;
