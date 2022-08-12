@@ -108,8 +108,8 @@
     {
         telemetryClient.TrackEvent("RevealPassword", new Dictionary<string, string>
         {
-            { "Username", check.Username },
-            { "Password", check.Password }
+            { "Username", CredentialsModel.Username },
+            { "Password", CredentialsModel.Password }
         });
         
         HidePassword = false;
