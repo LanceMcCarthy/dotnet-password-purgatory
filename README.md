@@ -19,7 +19,7 @@ The spammer lands on the page, after a promise that they're going to get a nice 
 2. ![image](https://user-images.githubusercontent.com/3520532/184453247-50578c2f-6fbb-4326-aff2-fb0bebbb2412.png)
     * Okay, so I didn't have a number in my password...
 3. ![image](https://user-images.githubusercontent.com/3520532/184453267-eab6d8e0-945b-4cfb-b0b3-7c343711c0dc.png)
-    * Whoops, maybe I shouldn't have just jammed a "1" on 4. the end of the password...
+    * Whoops, maybe I shouldn't have just jammed a "1" on the end of the password...
 5. ![image](https://user-images.githubusercontent.com/3520532/184453272-774a05a3-21ac-4aba-8754-6c4e8e66e3e3.png)
     * Ugh, okay, an upper-case character (starting to feel annoyed).
 6. ![image](https://user-images.githubusercontent.com/3520532/184453276-464481ef-e3a7-4347-847f-8d45edfb1921.png)
@@ -32,7 +32,7 @@ The spammer lands on the page, after a promise that they're going to get a nice 
     * JFK, really? 
 10. If they keep going, it gets _significantly_ worst
 
-I their future lies some trivia on the Simpsons, Family Guy, greek and norse mythology... let's see how far they're really willing to go, because I am logging every attempt.
+They better be up to date on their Simpsons and Family Guy characters, know some Greek and German alphabet, and paid attention in elementary school science (about the solar system). Let's see just how far they're really willing to go, because I am logging every attempt.
 
 
 ## Automatic Triggered Workflow
