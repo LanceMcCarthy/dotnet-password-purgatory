@@ -128,18 +128,18 @@
                 check.Username = CredentialsModel.Username;
                 check.Password = CredentialsModel.Password;
 
-                telemetryClient.TrackEvent("PwdCheck", new Dictionary<string, string>
+                if (check.ValidateCredentials())
+                {
+                    continue;
+                }
+            
+                telemetryClient.TrackEvent("Failed Check", new Dictionary<string, string>
                 {
                     { "Username", check.Username },
                     { "Password", check.Password },
                     { "Rule Number", $"{checkNumber}"},
                     { "Rule Message", check.Message},
                 });
-                
-                if (check.ValidateCredentials())
-                {
-                    continue;
-                }
 
                 ResultMessage = check.Message;
                 
