@@ -99,27 +99,26 @@
 
     protected override Task OnInitializedAsync()
     {
+        telemetryClient.TrackEvent("InviteLoaded");
+
         return Task.CompletedTask;
     }
 
     public async Task RevealPassword()
     {
+        telemetryClient.TrackEvent("RevealPassword", new Dictionary<string, string>
+        {
+            { "Username", check.Username },
+            { "Password", check.Password }
+        });
+        
         HidePassword = false;
         await Task.Delay(700);
         HidePassword = true;
     }
 
-    public async Task RevealConfirmPassword()
-    {
-        HideConfirmPassword = false;
-        await Task.Delay(700);
-        HideConfirmPassword = true;
-    }
-
     public void HandleValidSubmit()
     {
-        var checksPassed = 0;
-
         try
         {
             foreach (var check in Check.Checks)
@@ -129,18 +128,16 @@
                 check.Username = CredentialsModel.Username;
                 check.Password = CredentialsModel.Password;
 
-                telemetryClient.TrackEvent("My Event", new Dictionary<string, string>
+                telemetryClient.TrackEvent("PwdCheck", new Dictionary<string, string>
                 {
                     { "Username", check.Username },
                     { "Password", check.Password },
-                    { "Rule Number", $"{checkNumber}"}
+                    { "Rule Number", $"{checkNumber}"},
+                    { "Rule Message", check.Message},
                 });
                 
                 if (check.ValidateCredentials())
                 {
-                    checksPassed++;
-                    ResultMessage = $"checking availability #{checksPassed}";
-                    StateHasChanged();
                     continue;
                 }
 
