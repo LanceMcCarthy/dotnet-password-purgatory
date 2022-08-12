@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace PasswordPurgatory.ApiFunction.Models;
+namespace PasswordPurgatory.Web.Models;
 
 public class Check
 {
@@ -15,6 +13,9 @@ public class Check
 
     public InfuriationLevel InfuriationLevel { get; set; }
 
+    /// <summary>
+    /// Returns true to pass, false to fails
+    /// </summary>
     public Func<string, string, bool> Validator { get; set; }
 
     public bool ValidateCredentials()
@@ -34,11 +35,7 @@ public class Check
         {
             Message = "Password must not match the username",
             InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) =>
-            {
-                // These must not be identical for the rule to pass
-                return un.ToLowerInvariant() != pwd.ToLowerInvariant();
-            }
+            Validator = (un, pwd) => un.ToLowerInvariant() != pwd.ToLowerInvariant()
         },
         new()
         {
@@ -48,11 +45,8 @@ public class Check
             {
                 var lowered = un.ToLowerInvariant();
 
-                if(lowered == "admin" ||
-                   lowered == "anonymous" ||
-                   lowered == "anon" ||
-                   lowered == "user" ||
-                   lowered == "null"){
+                if(lowered is "admin" or "anonymous" or "anon" or "user" or "null" or "test")
+                {
                     return false;
                 }
                 
@@ -61,39 +55,55 @@ public class Check
         },
         new()
         {
+            Message = "This is not a test or a joke, your password is too weak. A lot of money is on the line, please create a strong password to protect your account.",
+            InfuriationLevel = InfuriationLevel.Low,
+            Validator = (un, pwd) =>
+            {
+                var lowered = pwd.ToLowerInvariant();
+
+                if(lowered is "test" or "joke" or "anonymous" or "anon" or "user" or "null")
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        },
+        new()
+        {
             Message = "Password must contain at least 1 number",
             InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/\d+/").Success
+            Validator = (un, pwd) => pwd.Any(char.IsDigit)
         },
         new()
         {
             Message = "Password must not end in '!'",
             InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/!$/").Success
+            Validator = (un, pwd) => pwd[^1..] != "!"
+        },
+        new()
+        {
+            Message = "Password must not end in '1'",
+            InfuriationLevel = InfuriationLevel.Moderate,
+            Validator = (un, pwd) => pwd[^1..] != "1"
         },
         new()
         {
             Message = "Password must contain at least 1 upper case character",
             InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/[A-Z]/").Success
+            Validator = (un, pwd) => pwd.Any(char.IsUpper)
         },
         new()
         {
             Message = "Password must contain at least 1 lower case character",
             InfuriationLevel = InfuriationLevel.Low,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/[a-z]/").Success
+            Validator = (un, pwd) => pwd.Any(char.IsLower)
         },
         new()
         {
             Message = "Password must be at least 8 characters long",
             InfuriationLevel = InfuriationLevel.Low,
             Validator = (un, pwd) => pwd.Length >= 8
-        },
-        new()
-        {
-            Message = "Password must not end in '1'",
-            InfuriationLevel = InfuriationLevel.Moderate,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/1$/").Success
         },
         new()
         {
@@ -105,37 +115,43 @@ public class Check
         {
             Message = "Password must end with 'dog'.",
             InfuriationLevel = InfuriationLevel.Moderate,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/dog$/").Success
+            Validator = (un, pwd) => pwd[^3..].ToLower() == "dog"
         },
         new()
         {
             Message = "Password must start with 'cat'.",
             InfuriationLevel = InfuriationLevel.Moderate,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/^cat/").Success
+            Validator = (un, pwd) => pwd[..3].ToLower() == "cat"
         },
         new()
         {
             Message = "Password must contain at least 3 digits from the first 10 decimal places of pi.",
             InfuriationLevel = InfuriationLevel.High,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/(?:[^1234569]*[1234569]){3}[^1234569]*/").Success
+            Validator = (un, pwd) =>
+            {
+                var numbersOnly = pwd.Where(char.IsDigit).ToArray();
+                var piNumbers = new [] { "1", "2", "3", "4", "5", "6", "9" };
+                var totalMatches = numbersOnly.Where(num => piNumbers.Contains(num.ToString()));
+                return totalMatches.Count() >= 3;
+            }
         },
         new()
         {
             Message = "Password must contain at least 1 primary Simpsons family character (case sensitive).",
             InfuriationLevel = InfuriationLevel.High,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/Homer|Marge|Bart|Lisa|Maggie/").Success
-        },
+            Validator = (un, pwd) => "Homer|Marge|Bart|Lisa|Maggie".Split("|").Any(pwd.Contains)
+},
         new()
         {
             Message = "Password must contain at least 1 primary Griffin family character (caps sensitive).",
             InfuriationLevel = InfuriationLevel.High,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/Peter|Lois|Chris|Meg|Brian|Stewie/").Success
+            Validator = (un, pwd) => "Peter|Lois|Chris|Meg|Brian|Stewie".Split('|').Any(pwd.Contains)
         },
         new()
         {
-            Message = @"Password must contain at least one emoticon (examples: =], :), :p)",
+            Message = @"Password must contain at least one common emoticon (examples: =], :), :p)",
             InfuriationLevel = InfuriationLevel.High,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/:‑\)|:\)|:\-\]|:\]|:>|:\-\}|:\}|:o\)\)|:\^\)|=\]|=\)|:\]|:\->|:>|8\-\)|:\-\}|:\}|:o\)|:\^\)|=\]|=\)|:‑D|:D|B\^D|:‑\(|:\(|:‑<|:<|:‑\[|:\[|:\-\|\||>:\[|:\{|:\(|;\(|:\'‑\(|:\'\(|:=\(|:\'‑\)|:\'\)|:‑O|:O|:‑o|:o|:\-0|>:O|>:3|;‑\)|;\)|;‑\]|;\^\)|:‑P|:\-\/|:\/|:‑\.|>:|>:\/|:|:‑\||:\||>:‑\)|>:\)|\}:‑\)|>;‑\)|>;\)|>:3|\|;‑\)|:‑J|<:‑\||~:>/,").Success
+            Validator = (un, pwd) => ";p|:-p|:P|:‑)|:)|:-]|:]|:>|:-}|:}|:o))|:^)|=]|=)|:]|:->|:>|8-)|:-}|:}|:o)|:^)|=]|=)|:‑D|:D|B^D|:‑(|:(|:‑<|:<|:‑[|:[|:{|:(|;(|:'‑(|:'(|:=(|:'‑)|:')|:‑O|:O|:‑o|:o|:-0|>:O|>:3|;‑)|;)|;‑]|;^)|:‑P|:-/|:/|:‑.|>:|>:/|:|:‑||>:‑)|>:)|}:‑)|>;‑)|>;)|>:3|;‑)|:‑J|<:‑||~:>/".Split('|').Any(pwd.Contains)
         },
         new()
         {
@@ -145,13 +161,11 @@ public class Check
             {
                 try
                 {
-                    var numbersOnly = new string(pwd.Where(char.IsDigit).ToArray());
-
-                    return numbersOnly.Sum(Convert.ToInt32) % 3 == 0;
+                    return new string(pwd.Where(char.IsDigit).ToArray()).Sum(Convert.ToInt32) % 3 == 0;
                 }
                 catch (Exception)
                 {
-                    // Just in case there's a problem with my logic/math, I don't want to ruin the fun... so lets keep moving on.
+                    // Just in case there's a problem with my logic, I don't want to ruin the fun... so lets keep moving on.
                     return true;
                 }
             }
@@ -160,13 +174,19 @@ public class Check
         {
             Message = "Password must contain a bobcat (use scientific name for stronger security).",
             InfuriationLevel = InfuriationLevel.Ridiculous,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/bobcat|Lynx rufus|L. rufus/").Success
+            Validator = (un, pwd) => @"bobcat|Lynx rufus|L. rufus".Split('|').Any(pwd.Contains)
+        },
+        new()
+        {
+            Message = "Password must contain at least 1 Nordic character (examples: Å, å, Ä, ä, Ö, ö, Æ, æ, Ø, ø)",
+            InfuriationLevel = InfuriationLevel.Ridiculous,
+            Validator = (un, pwd) => @"Å|å|Ä|ä|Ö|ö|Æ|æ|Ø|ø".Split("|").Any(pwd.Contains)
         },
         new()
         {
             Message = "Password must contain at least one name of a moon in the solar system (case sensitive).",
             InfuriationLevel = InfuriationLevel.Ridiculous,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/Luna|Deimos|Phobos|Amalthea|Callisto|Europa|Ganymede|Io|Dione|Enceladus|Hyperion|Iapetus|Mimas|Phoebe|Rhea|Tethys|Titan|Ariel|Miranda|Oberon|Titania|Umbriel|Nereid|Triton|Charon|Himalia|Carme|Ananke|Adrastea|Elara|Adrastea|Elara|Epimetheus|Callirrhoe|Kalyke|Thebe|Methone|Kiviuq|Ijiraq|Paaliaq|Albiorix|Erriapus|Pallene|Polydeuces|Bestla|Daphnis|Despina|Puck|Carpo|Pasiphae|Themisto|Cyllene|Isonoe|Harpalyke|Hermippe|Iocaste|Chaldene|Euporie/").Success
+            Validator = (un, pwd) => @"Luna|Deimos|Phobos|Amalthea|Callisto|Europa|Ganymede|Io|Dione|Enceladus|Hyperion|Iapetus|Mimas|Phoebe|Rhea|Tethys|Titan|Ariel|Miranda|Oberon|Titania|Umbriel|Nereid|Triton|Charon|Himalia|Carme|Ananke|Adrastea|Elara|Adrastea|Elara|Epimetheus|Callirrhoe|Kalyke|Thebe|Methone|Kiviuq|Ijiraq|Paaliaq|Albiorix|Erriapus|Pallene|Polydeuces|Bestla|Daphnis|Despina|Puck|Carpo|Pasiphae|Themisto|Cyllene|Isonoe|Harpalyke|Hermippe|Iocaste|Chaldene|Euporie".Split('|').Any(pwd.Contains)
         },
         new()
         {
@@ -184,13 +204,7 @@ public class Check
         {
             Message = "Password must contain 'Password must contain' (case sensitive)",
             InfuriationLevel = InfuriationLevel.Ridiculous,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/Password\smust\scontain/").Success
-        },
-        new()
-        {
-            Message = "Password must contain at least 1 Nordic character (examples: Å, å, Ä, ä, Ö, ö, Æ, æ, Ø, ø)",
-            InfuriationLevel = InfuriationLevel.Ridiculous,
-            Validator = (un, pwd) => Regex.Match(pwd, @"/[ÅåÄäÖöÆæØø]/").Success
+            Validator = (un, pwd) => pwd.Contains("/Password must contain/")
         },
         new()
         {

@@ -1,4 +1,4 @@
-namespace PasswordPurgatory.ApiFunction.Models;
+namespace PasswordPurgatory.Web.Models;
 
 public enum InfuriationLevel
 {

@@ -1,10 +1,15 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddTelerikBlazor();
 builder.Services.AddHttpClient();
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 
 //const string myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 //builder.Services.AddCors(options =>
@@ -41,4 +46,3 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
-
