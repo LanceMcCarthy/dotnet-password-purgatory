@@ -41,11 +41,25 @@
     }
 </style>
 
-<h3 class="myForm">Congratulations!</h3>
+<div class="myForm">
+    <p>If you have been provided with a link to this page, you have been invited to a private partnership. To begin our relationship, we will send you a down-payment of up to 50% of your total.</p>
+    <p>Please follow these steps:</p>
+    <ol>
+        <li>Create a temporary username and password</li>
+        <li>On the partner page, enter your business name and the amount you would like to receive for down-payment</li>
+        <li>Select the payment method you prefer:
+            <ul>
+                <li><strong>Cash</strong> sent to you via FedEx or UPS (no normal mail)</li>
+                <li><strong>Cryptocurrency</strong> (BTC, LTC or ETH only)</li>
+                <li><strong>Credit</strong> (fees must be 1.5% or less)</li>
+            </ul>
+        </li>
+        <li>Complete the payment details, the amount will be sent automatically within 2 hours.</li>
+        <li>When your services are complete, come back here to receive payment for the remainder of the contract.</li>
+    </ol>
+</div>
 
-<p>If you landed on this page, it means I have invited you to a lucrative one-on-one partnership opportunity! To access our one-on-one chat and start our partnership, please create a username and password.</p>
 
-<br />
 <br />
 
 <EditForm Model="@CredentialsModel" OnValidSubmit="@HandleValidSubmit" class="myForm">
