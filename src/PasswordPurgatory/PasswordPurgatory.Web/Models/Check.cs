@@ -194,12 +194,12 @@ public class Check
             InfuriationLevel = InfuriationLevel.Ridiculous,
             Validator = (un, pwd) => Regex.Match(pwd, @"/[ÄÜÖ\u1e9e]/").Success
         },
-        /*new()
-        {
-            Message = "Password must contain only unique characters.",
-            InfuriationLevel = InfuriationLevel.Ridiculous,
-            Validator = (un, pwd) => !Regex.Match(pwd, @"/(?=^[A-Za-z0-9]+$)(.)+.*\1.*/").Success //regex matches when there's a duplicate character
-        },*/
+        //new()
+        //{
+        //    Message = "Password must contain only unique characters.",
+        //    InfuriationLevel = InfuriationLevel.Ridiculous,
+        //    Validator = (un, pwd) => !Regex.Match(pwd, @"/(?=^[A-Za-z0-9]+$)(.)+.*\1.*/").Success //regex matches when there's a duplicate character
+        //},
         new()
         {
             Message = "Password must contain 'Password must contain' (case sensitive)",
