@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using PasswordPurgatory.Web.Models
+@using Telerik.SvgIcons;
 @inject TelemetryClient telemetryClient;
 
 <style>
@@ -79,7 +80,7 @@
                         Width="250px"
                         @bind-Value="@CredentialsModel.Password"></TelerikTextBox>
         <TelerikButton OnClick="@RevealPassword"
-                       Icon="unlock"
+                       Icon="@SvgIcon.Unlock"
                        ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
                        ButtonType="ButtonType.Button"></TelerikButton>
     </div>
@@ -135,9 +136,9 @@
     {
         try
         {
-            foreach (var check in Check.Checks)
+            foreach (var check in Models.Check.Checks)
             {
-                var checkNumber = Check.Checks.IndexOf(check) + 1;
+                var checkNumber = Models.Check.Checks.IndexOf(check) + 1;
 
                 check.Username = CredentialsModel.Username;
                 check.Password = CredentialsModel.Password;
