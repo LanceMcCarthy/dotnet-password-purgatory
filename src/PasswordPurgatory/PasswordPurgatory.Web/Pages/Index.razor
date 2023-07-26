@@ -47,15 +47,15 @@
     <p>Please follow these steps:</p>
     <ol>
         <li>Create a temporary username and password</li>
-        <li>On the partner page, enter your business name and the amount you would like to receive for down-payment</li>
-        <li>Select the payment method you prefer:
+        <li>Select the payment method you want to receive the money:
             <ul>
-                <li><strong>Cash</strong> sent to you via FedEx or UPS (no normal mail)</li>
-                <li><strong>Cryptocurrency</strong> (BTC, LTC or ETH only)</li>
-                <li><strong>Credit</strong> (fees must be 1.5% or less)</li>
+                <li><strong>Cash</strong> sent to you via FedEx or UPS (USPS mail is not allowed to send cash)</li>
+                <li><strong>CryptoCurrency</strong> (BTC, LTC or ETH only)</li>
+                <li><strong>Wire Transfer</strong></li>
             </ul>
         </li>
-        <li>Complete the payment details, the amount will be sent automatically within 2 hours.</li>
+        <li>On the partner page, enter your business name and the amount you would like to receive for down-payment</li>
+        <li>Complete the payment details, the amount will be <string>sent automatically within 2 hours</string>.</li>
         <li>When your services are complete, come back here to receive payment for the remainder of the contract.</li>
     </ol>
 </div>
@@ -65,6 +65,23 @@
 
 <EditForm Model="@CredentialsModel" OnValidSubmit="@HandleValidSubmit" class="myForm">
     <DataAnnotationsValidator />
+    
+    <div>
+        <label for="paymenttype">How would you like to receive your money:</label>
+        <div>
+            <TelerikDropDownList Data="@AvailablePaymentTypes"
+                                 @bind-Value="@CredentialsModel.DesiredPaymentType"
+                                 DefaultText="Select Payment Type"
+                                 Id="paymenttype"
+                                 Width="250px">
+                <DropDownListSettings>
+                    <DropDownListPopupSettings Height="auto"></DropDownListPopupSettings>
+                </DropDownListSettings>
+            </TelerikDropDownList>
+        </div>
+    </div>
+
+    <br />
 
     <div>
         <TelerikTextBox PlaceHolder="Create a username"
@@ -75,7 +92,7 @@
     <br />
 
     <div>
-        <TelerikTextBox PlaceHolder="Enter Password"
+        <TelerikTextBox PlaceHolder="Create Password"
                         Password="HidePassword"
                         Width="250px"
                         @bind-Value="@CredentialsModel.Password"></TelerikTextBox>
@@ -95,7 +112,7 @@
 
     <div>
         <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
-                       ButtonType="@ButtonType.Submit">Submit</TelerikButton>
+                       ButtonType="@ButtonType.Submit">Create Account</TelerikButton>
     </div>
 </EditForm>
 
@@ -110,6 +127,8 @@
     public bool HideConfirmPassword { get; set; } = true;
     public bool IsSubmitButtonEnabled { get; set; }
     public string? ResultMessage { get; set; }
+
+    public List<string> AvailablePaymentTypes = new() { "Cash", "BTC", "LTC", "ETH", "Wire Transfer" };
 
 
     protected override Task OnInitializedAsync()
