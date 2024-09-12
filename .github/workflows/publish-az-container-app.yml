@@ -1,12 +1,12 @@
 name: Deploy to Azure Container App
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - 'src/PasswordPurgatory/PasswordPurgatory.Web/**/*' 
-      - '.github/workflows/publish-azure-webapp.yml'
+      - 'src/PasswordPurgatory/PasswordPurgatory.Web/**/*'
 
 env:
   CSPROJ_PATH: src/PasswordPurgatory/PasswordPurgatory.Web/PasswordPurgatory.Web.csproj
