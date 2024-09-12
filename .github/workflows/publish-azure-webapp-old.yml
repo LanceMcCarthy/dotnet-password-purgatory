@@ -1,11 +1,12 @@
 name: Publish Azure Web App
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'src/PasswordPurgatory/PasswordPurgatory.Web/**/*' 
-      - '.github/workflows/publish-azure-webapp.yml'
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'src/PasswordPurgatory/PasswordPurgatory.Web/**/*' 
+  #     - '.github/workflows/publish-azure-webapp.yml'
 
 env:
   AZURE_WEBAPP_NAME: PasswordPurgatoryWeb
