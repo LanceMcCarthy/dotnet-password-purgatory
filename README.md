@@ -6,7 +6,7 @@ Build Statuses
 
 | Project           | Status     |
 |-------------------|------------|
-| Blazor App: [https://partnership.dvlup.com](https://partnership.dvlup.com) |  [![Publish Azure Web App](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-webapp.yml/badge.svg)](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-azure-webapp.yml)   |
+| Blazor App: [https://partnership.dvlup.com](https://partnership.dvlup.com) |  [![Deploy to Azure Container App](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-az-container-app.yml/badge.svg)](https://github.com/LanceMcCarthy/dotnet-password-purgatory/actions/workflows/publish-az-container-app.yml)   |
 
 ## User Experience 😈
 
