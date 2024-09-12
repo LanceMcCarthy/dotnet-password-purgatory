@@ -15,6 +15,7 @@ env:
   CONTAINER_APP_RESOURCE_GROUP_NAME: password-purgatory
   CONTAINER_REGISTRY_LOGIN_SERVER: mvp10k.azurecr.io
   DOTNET_CORE_VERSION: 8.0.x
+  DOTNET_RID: linux-x64
   PROJECT_NAME_FOR_DOCKER: passwordpurgatory.web
   NUGETCONFIG_PATH: src/PasswordPurgatory/NuGet.Config
   TELERIK_NUGET_KEY: ${{ secrets.TELERIK_NUGET_KEY }}
@@ -40,10 +41,10 @@ jobs:
         password: ${{secrets.mvp10k_PASSWORD_00EC}}
 
     - name: Restore
-      run: dotnet restore "${{ env.CSPROJ_PATH }}" --configfile ${{ env.NUGETCONFIG_PATH }}
+      run: dotnet restore "${{env.CSPROJ_PATH}}" -r ${{env.DOTNET_RID}} --configfile ${{env.NUGETCONFIG_PATH}}
 
     - name: Build and push container image to registry
-      run: dotnet publish ${{env.CSPROJ_PATH}} -c Release -r linux-x64 -p:PublishProfile=DefaultContainer -p:ContainerImageTag=${{github.sha}} --no-restore --no-self-contained -p:ContainerRegistry=${{env.CONTAINER_REGISTRY_LOGIN_SERVER}} -bl
+      run: dotnet publish ${{env.CSPROJ_PATH}} -c Release -r ${{env.DOTNET_RID}} -p:PublishProfile=DefaultContainer -p:ContainerImageTag=${{github.sha}} --no-restore --no-self-contained -p:ContainerRegistry=${{env.CONTAINER_REGISTRY_LOGIN_SERVER}} -bl
 
     - name: Upload binlog for investigation
       uses: actions/upload-artifact@v4
