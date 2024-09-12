@@ -9,6 +9,7 @@ on:
       - '.github/workflows/publish-azure-webapp.yml'
 
 env:
+  CSPROJ_PATH: src/PasswordPurgatory/PasswordPurgatory.Web/PasswordPurgatory.Web.csproj
   CONTAINER_APP_CONTAINER_NAME: passwordpurgatoryweb
   CONTAINER_APP_NAME: passwordpurgatoryweb-app-2024091
   CONTAINER_APP_RESOURCE_GROUP_NAME: password-purgatory
@@ -27,17 +28,17 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         include-prerelease: True
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+        dotnet-version: ${{env.DOTNET_CORE_VERSION}}
 
     - name: Log in to container registry
       uses: azure/docker-login@v2
       with:
-        login-server: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}
-        username: ${{ secrets.mvp10k_USERNAME_00EC }}
-        password: ${{ secrets.mvp10k_PASSWORD_00EC }}
+        login-server: ${{env.CONTAINER_REGISTRY_LOGIN_SERVER}}
+        username: ${{secrets.mvp10k_USERNAME_00EC}}
+        password: ${{secrets.mvp10k_PASSWORD_00EC}}
 
     - name: Build and push container image to registry
-      run: dotnet publish -c Release -r linux-x64 -p:PublishProfile=DefaultContainer -p:ContainerImageTag=${{ github.sha }} --no-self-contained -p:ContainerRegistry=${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} -bl
+      run: dotnet publish ${{env.CSPROJ_PATH}} -c Release -r linux-x64 -p:PublishProfile=DefaultContainer -p:ContainerImageTag=${{github.sha}} --no-self-contained -p:ContainerRegistry=${{env.CONTAINER_REGISTRY_LOGIN_SERVER}} -bl
 
     - name: Upload binlog for investigation
       uses: actions/upload-artifact@v4
@@ -53,7 +54,7 @@ jobs:
     - name: Az Login
       uses: azure/login@v2
       with:
-        creds: ${{ secrets.passwordpurgatoryweb_app_2024091_SPN }}
+        creds: ${{secrets.passwordpurgatoryweb_app_2024091_SPN}}
 
     - name: Az Container App Deploy
       uses: azure/CLI@v2
@@ -61,9 +62,9 @@ jobs:
         inlineScript: >
           az config set extension.use_dynamic_install=yes_without_prompt
 
-          az containerapp registry set --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --server ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }} --username ${{ secrets.mvp10k_USERNAME_00EC }} --password ${{ secrets.mvp10k_PASSWORD_00EC }}
+          az containerapp registry set --name ${{env.CONTAINER_APP_NAME}} --resource-group ${{env.CONTAINER_APP_RESOURCE_GROUP_NAME}} --server ${{env.CONTAINER_REGISTRY_LOGIN_SERVER}} --username ${{secrets.mvp10k_USERNAME_00EC}} --password ${{secrets.mvp10k_PASSWORD_00EC}}
 
-          az containerapp update --name ${{ env.CONTAINER_APP_NAME }} --container-name ${{ env.CONTAINER_APP_CONTAINER_NAME }} --resource-group ${{ env.CONTAINER_APP_RESOURCE_GROUP_NAME }} --image ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.PROJECT_NAME_FOR_DOCKER }}:${{ github.sha }}
+          az containerapp update --name ${{env.CONTAINER_APP_NAME}} --container-name ${{env.CONTAINER_APP_CONTAINER_NAME}} --resource-group ${{env.CONTAINER_APP_RESOURCE_GROUP_NAME}} --image ${{env.CONTAINER_REGISTRY_LOGIN_SERVER}}/${{env.PROJECT_NAME_FOR_DOCKER}}:${{github.sha}}
 
     - name: Az Logout
       run: az logout
