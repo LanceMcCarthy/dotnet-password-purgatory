@@ -2,7 +2,7 @@
 
 @using PasswordPurgatory.Web.Models
 @using Telerik.SvgIcons;
-@inject TelemetryClient telemetryClient;
+@inject TelemetryClient TelemetryClient;
 
 <style>
     .myForm {
@@ -70,7 +70,7 @@
         <label for="paymenttype">How would you like to receive your money:</label>
         <div>
             <TelerikDropDownList Data="@AvailablePaymentTypes"
-                                 @bind-Value="@SelectedPaymentType"
+                                 @bind-Value="@CredentialsModel.DesiredPaymentType"
                                  DefaultText="Select Payment Type"
                                  Id="paymenttype"
                                  Width="250px">
@@ -79,12 +79,12 @@
                 </DropDownListSettings>
             </TelerikDropDownList>
             
-            @if (SelectedPaymentType is "BTC" or "LTC" or "ETH")
+            @* @if (CredentialsModel.DesiredPaymentType is "BTC" or "LTC" or "ETH")
             {
                 <TelerikTextBox @ref="WalletBox"
-                                PlaceHolder="Enter @SelectedPaymentType wallet to deposit funds to"
+                                PlaceHolder="Enter wallet address"
                                 Width="250px" />
-            }
+            } *@
         </div>
     </div>
 
@@ -129,9 +129,6 @@
 
 
 @code {
-    public TelerikTextBox? WalletBox { get; set; }
-    public string? WalletBoxPlaceholder { get; set; }
-
     public PasswordModel CredentialsModel { get; set; } = new();
     public bool HidePassword { get; set; } = true;
     public bool HideConfirmPassword { get; set; } = true;
@@ -140,37 +137,25 @@
 
     public List<string> AvailablePaymentTypes = ["Cash", "BTC", "LTC", "ETH", "Wire Transfer"];
 
-    private string selectedPaymentType = "Cash";
-    public string SelectedPaymentType
-    {
-        get => selectedPaymentType;
-        set
-        {
-            selectedPaymentType = value;
-
-            CredentialsModel.DesiredPaymentType = value;
-            WalletBoxPlaceholder = $"Enter {SelectedPaymentType} wallet to deposit funds to";
-        }
-    }
-
-
     protected override Task OnInitializedAsync()
     {
-        telemetryClient.TrackEvent("InviteLoaded");
+        TelemetryClient.TrackEvent("InviteLoaded");
 
         return Task.CompletedTask;
     }
 
     public async Task RevealPassword()
     {
-        telemetryClient.TrackEvent("RevealPassword", new Dictionary<string, string>
+        TelemetryClient.TrackEvent("RevealPassword", new Dictionary<string, string>
         {
             { "Username", CredentialsModel.Username },
             { "Password", CredentialsModel.Password }
         });
-        
+
         HidePassword = false;
+
         await Task.Delay(700);
+
         HidePassword = true;
     }
 
@@ -189,15 +174,14 @@
                 {
                     continue;
                 }
-            
-                telemetryClient.TrackEvent("Failed Check", new Dictionary<string, string>
+
+                TelemetryClient.TrackEvent("Failed Check", new Dictionary<string, string>
                 {
                     { "Username", check.Username },
                     { "Password", check.Password },
                     { "Rule Number", $"{checkNumber}"},
                     { "Rule Message", check.Message},
-                    { "SelectedPaymentType", CredentialsModel.DesiredPaymentType },
-                    { "WalletAddress", WalletBox!.Value }
+                    { "SelectedPaymentType", CredentialsModel.DesiredPaymentType }
                 });
 
                 ResultMessage = check.Message;
@@ -207,7 +191,7 @@
         }
         catch (Exception ex)
         {
-            telemetryClient.TrackException(ex);
+            TelemetryClient.TrackException(ex);
 
             ResultMessage = "There was a problem communicating with the account service. This is likely a temporary issue, please try again soon.";
         }

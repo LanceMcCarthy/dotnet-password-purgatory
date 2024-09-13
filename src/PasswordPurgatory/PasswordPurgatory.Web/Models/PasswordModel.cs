@@ -5,10 +5,10 @@ namespace PasswordPurgatory.Web.Models;
 public class PasswordModel
 {
     [Required]
-    public string Username { get; set; }
+    public string Username { get; set; } = null!;
 
     [Required]
-    public string Password { get; set; }
+    public string Password { get; set; } = null!;
 
     [Required]
     public string DesiredPaymentType { get; set; } = "Cash";
