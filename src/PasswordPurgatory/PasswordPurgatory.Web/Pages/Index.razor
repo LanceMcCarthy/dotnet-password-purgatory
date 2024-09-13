@@ -82,9 +82,8 @@
             @if (SelectedPaymentType is "BTC" or "LTC" or "ETH")
             {
                 <TelerikTextBox @ref="WalletBox"
-                                PlaceHolder="Enter wallet to deposit funds to"
-                                Width="250px"
-                                @bind-Value="@CredentialsModel.DesiredPaymentType" />
+                                PlaceHolder="Enter @SelectedPaymentType wallet to deposit funds to"
+                                Width="250px" />
             }
         </div>
     </div>
@@ -130,7 +129,9 @@
 
 
 @code {
-    public TelerikTextBox WalletBox { get; set; }
+    public TelerikTextBox? WalletBox { get; set; }
+    public string? WalletBoxPlaceholder { get; set; }
+
     public PasswordModel CredentialsModel { get; set; } = new();
     public bool HidePassword { get; set; } = true;
     public bool HideConfirmPassword { get; set; } = true;
@@ -148,6 +149,7 @@
             selectedPaymentType = value;
 
             CredentialsModel.DesiredPaymentType = value;
+            WalletBoxPlaceholder = $"Enter {SelectedPaymentType} wallet to deposit funds to";
         }
     }
 
@@ -195,7 +197,7 @@
                     { "Rule Number", $"{checkNumber}"},
                     { "Rule Message", check.Message},
                     { "SelectedPaymentType", CredentialsModel.DesiredPaymentType },
-                    { "WalletAddress", WalletBox.Value }
+                    { "WalletAddress", WalletBox!.Value }
                 });
 
                 ResultMessage = check.Message;
