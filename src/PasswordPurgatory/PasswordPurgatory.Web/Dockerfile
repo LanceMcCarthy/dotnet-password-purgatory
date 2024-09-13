@@ -7,7 +7,8 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN --mount=type=secret,id=telerik_key dotnet nuget add source 'https://nuget.telerik.com/v3/index.json' -n "TelerikNuGetServer" -u "api-key" -p $(cat /run/secrets/telerik_key) --store-password-in-clear-text
+RUN --mount=type=secret,id=telerik_key \
+  dotnet nuget add source 'https://nuget.telerik.com/v3/index.json' -n "TelerikNuGetServer" -u "api-key" -p $(cat /run/secrets/telerik_key) --store-password-in-clear-text
 RUN dotnet restore "./PasswordPurgatory.Web.csproj"
 RUN dotnet build "./PasswordPurgatory.Web.csproj" -c Release -o /app/build --no-restore
 
