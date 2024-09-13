@@ -70,14 +70,22 @@
         <label for="paymenttype">How would you like to receive your money:</label>
         <div>
             <TelerikDropDownList Data="@AvailablePaymentTypes"
-                                 @bind-Value="@CredentialsModel.DesiredPaymentType"
+                                 @bind-Value="@SelectedPaymentType"
                                  DefaultText="Select Payment Type"
                                  Id="paymenttype"
                                  Width="250px">
                 <DropDownListSettings>
-                    <DropDownListPopupSettings Height="auto"></DropDownListPopupSettings>
+                    <DropDownListPopupSettings Height="auto"/>
                 </DropDownListSettings>
             </TelerikDropDownList>
+            
+            @if (SelectedPaymentType is "BTC" or "LTC" or "ETH")
+            {
+                <TelerikTextBox @ref="WalletBox"
+                                PlaceHolder="Enter wallet to deposit funds to"
+                                Width="250px"
+                                @bind-Value="@CredentialsModel.DesiredPaymentType" />
+            }
         </div>
     </div>
 
@@ -86,7 +94,7 @@
     <div>
         <TelerikTextBox PlaceHolder="Create a username"
                         Width="250px"
-                        @bind-Value="@CredentialsModel.Username"></TelerikTextBox>
+                        @bind-Value="@CredentialsModel.Username"/>
     </div>
 
     <br />
@@ -95,11 +103,11 @@
         <TelerikTextBox PlaceHolder="Create Password"
                         Password="HidePassword"
                         Width="250px"
-                        @bind-Value="@CredentialsModel.Password"></TelerikTextBox>
+                        @bind-Value="@CredentialsModel.Password"/>
         <TelerikButton OnClick="@RevealPassword"
                        Icon="@SvgIcon.Unlock"
                        ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
-                       ButtonType="ButtonType.Button"></TelerikButton>
+                       ButtonType="ButtonType.Button"/>
     </div>
 
     <br />
@@ -122,13 +130,26 @@
 
 
 @code {
+    public TelerikTextBox WalletBox { get; set; }
     public PasswordModel CredentialsModel { get; set; } = new();
     public bool HidePassword { get; set; } = true;
     public bool HideConfirmPassword { get; set; } = true;
     public bool IsSubmitButtonEnabled { get; set; }
     public string? ResultMessage { get; set; }
 
-    public List<string> AvailablePaymentTypes = new() { "Cash", "BTC", "LTC", "ETH", "Wire Transfer" };
+    public List<string> AvailablePaymentTypes = ["Cash", "BTC", "LTC", "ETH", "Wire Transfer"];
+
+    private string selectedPaymentType = "Cash";
+    public string SelectedPaymentType
+    {
+        get => selectedPaymentType;
+        set
+        {
+            selectedPaymentType = value;
+
+            CredentialsModel.DesiredPaymentType = value;
+        }
+    }
 
 
     protected override Task OnInitializedAsync()
@@ -173,6 +194,8 @@
                     { "Password", check.Password },
                     { "Rule Number", $"{checkNumber}"},
                     { "Rule Message", check.Message},
+                    { "SelectedPaymentType", CredentialsModel.DesiredPaymentType },
+                    { "WalletAddress", WalletBox.Value }
                 });
 
                 ResultMessage = check.Message;

@@ -10,5 +10,6 @@ public class PasswordModel
     [Required]
     public string Password { get; set; }
 
-    [Required] public string DesiredPaymentType { get; set; } = "Cash";
+    [Required]
+    public string DesiredPaymentType { get; set; } = "Cash";
 }
