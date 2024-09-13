@@ -5,13 +5,7 @@ on:
 
 env:
   CSPROJ_PATH: src/PasswordPurgatory/PasswordPurgatory.Web/PasswordPurgatory.Web.csproj
-  CONTAINER_APP_CONTAINER_NAME: passwordpurgatoryweb
-  CONTAINER_APP_NAME: passwordpurgatoryweb-app-2024091
-  CONTAINER_APP_RESOURCE_GROUP_NAME: password-purgatory
-  CONTAINER_REGISTRY_LOGIN_SERVER: mvp10k.azurecr.io
-  DOTNET_CORE_VERSION: 8.0.x
   DOTNET_RID: linux-x64
-  PROJECT_NAME_FOR_DOCKER: passwordpurgatory.web
   NUGETCONFIG_PATH: src/PasswordPurgatory/NuGet.Config
   TELERIK_NUGET_KEY: ${{ secrets.TELERIK_NUGET_KEY }}
 
@@ -25,13 +19,12 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        include-prerelease: True
-        dotnet-version: ${{env.DOTNET_CORE_VERSION}}
+        dotnet-version: '8.0.x'
 
     - name: Log in to container registry
       uses: azure/docker-login@v2
       with:
-        login-server: ${{env.CONTAINER_REGISTRY_LOGIN_SERVER}}
+        login-server: mvp10k.azurecr.io
         username: ${{secrets.mvp10k_USERNAME_00EC}}
         password: ${{secrets.mvp10k_PASSWORD_00EC}}
 
@@ -39,7 +32,7 @@ jobs:
       run: dotnet restore "${{env.CSPROJ_PATH}}" -r ${{env.DOTNET_RID}} --configfile ${{env.NUGETCONFIG_PATH}}
 
     - name: Build and push container image to registry
-      run: dotnet publish ${{env.CSPROJ_PATH}} -c Release -r ${{env.DOTNET_RID}} -p:PublishProfile=DefaultContainer -p:ContainerImageTag=${{github.sha}} --no-restore --no-self-contained -p:ContainerRegistry=${{env.CONTAINER_REGISTRY_LOGIN_SERVER}} -bl
+      run: dotnet publish ${{env.CSPROJ_PATH}} -c Release -r ${{env.DOTNET_RID}} -p:PublishProfile=DefaultContainer -p:ContainerImageTag=latest --no-restore --no-self-contained -p:ContainerRegistry='mvp10k.azurecr.io' -p:ContainerRepository="passwordpurgatoryweb" -bl
 
     - name: Upload binlog for investigation
       uses: actions/upload-artifact@v4
@@ -48,10 +41,6 @@ jobs:
         name: binlog
         path: msbuild.binlog
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
     - name: Az Login
       uses: azure/login@v2
       with:
@@ -60,12 +49,15 @@ jobs:
     - name: Az Container App Deploy
       uses: azure/CLI@v2
       with:
-        inlineScript: >
+        scriptType: 'ps'
+        scriptLocation: inlineScript
+        inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
 
-          az containerapp registry set --name ${{env.CONTAINER_APP_NAME}} --resource-group ${{env.CONTAINER_APP_RESOURCE_GROUP_NAME}} --server ${{env.CONTAINER_REGISTRY_LOGIN_SERVER}} --username ${{secrets.mvp10k_USERNAME_00EC}} --password ${{secrets.mvp10k_PASSWORD_00EC}}
+          az containerapp registry set --name passwordpurgatoryweb-app-2024091 --resource-group password-purgatory --server mvp10k.azurecr.io --username ${{secrets.mvp10k_USERNAME_00EC}} --password ${{secrets.mvp10k_PASSWORD_00EC}}
 
-          az containerapp update --name ${{env.CONTAINER_APP_NAME}} --container-name ${{env.CONTAINER_APP_CONTAINER_NAME}} --resource-group ${{env.CONTAINER_APP_RESOURCE_GROUP_NAME}} --image ${{env.CONTAINER_REGISTRY_LOGIN_SERVER}}/${{env.PROJECT_NAME_FOR_DOCKER}}:${{github.sha}}
+          az containerapp update --name passwordpurgatoryweb-app-2024091 --container-name passwordpurgatoryweb --resource-group password-purgatory --image mvp10k.azurecr.io/passwordpurgatoryweb:latest
 
     - name: Az Logout
       run: az logout
+
