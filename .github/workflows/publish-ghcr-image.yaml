@@ -2,6 +2,11 @@ name: .NET SDK Deploy
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/PasswordPurgatory/PasswordPurgatory.Web/**'
 
 permissions:
   contents: read
@@ -16,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout to the branch
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v5
@@ -35,3 +40,8 @@ jobs:
 
     - name: Build and push container image to GitHub Container Registry
       run: dotnet publish ${{env.CSPROJ_PATH}} -c Release -r ${{env.DOTNET_RID}} -p:PublishProfile=DefaultContainer -p:ContainerImageTag=latest -p:ContainerRegistry='ghcr.io' -p:ContainerRepository="$GHCR_IMAGE_REPOSITORY"
+
+    - name: Invoke Portainer webhook
+      run: curl --fail --request POST ${{secrets.PORTAINER_WEBHOOK_URL}}
+
+      
