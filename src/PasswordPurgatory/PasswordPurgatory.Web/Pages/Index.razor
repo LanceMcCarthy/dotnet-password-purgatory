@@ -5,127 +5,199 @@
 @inject TelemetryClient TelemetryClient;
 
 <style>
-    .myForm {
-        flex-direction: column;
-        align-items: flex-start;
-        display: flex;
-        align-content: center;
-        flex-wrap: wrap;
+    .invite-page {
+        max-width: 1024px;
+        margin: 2rem auto 3rem;
+        padding: 0 1rem;
+        color: #1f2937;
     }
 
-    p.k-messagebox-error {
-        text-align: center;
-        word-wrap: break-word;
-        margin-left: 10px;
-        margin-right: 10px;
-        flex-direction: column;
-        align-items: flex-start;
-        display: flex;
-        align-content: center;
-        flex-wrap: wrap;
+    .hero-card {
+        padding: 2rem;
+        border-radius: 1rem;
+        background: #f8fafc;
+        color: #1e293b;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 8px 18px -16px rgba(15, 23, 42, 0.35);
+    }
+
+    .hero-title {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+    }
+
+    .hero-text {
+        margin: 0.75rem 0 0;
+        line-height: 1.5;
+        font-size: 1rem;
+        max-width: 70ch;
+        color: #475569;
+    }
+
+    .page-grid {
+        margin-top: 1.5rem;
+        display: grid;
+        gap: 1.25rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        align-items: start;
+    }
+
+    .panel {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 1rem;
+        box-shadow: 0 12px 24px -20px rgba(15, 23, 42, 0.7);
+        padding: 1.5rem;
+    }
+
+    .panel-title {
+        margin: 0 0 1rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .steps-list {
+        margin: 0;
+        padding-left: 1.1rem;
+        line-height: 1.45;
+    }
+
+    .steps-list li + li {
+        margin-top: 0.65rem;
+    }
+
+    .steps-list ul {
+        margin-top: 0.5rem;
+    }
+
+    .form-stack {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .field-group {
+        display: grid;
+        gap: 0.4rem;
+    }
+
+    .field-label {
+        font-size: 0.92rem;
+        font-weight: 500;
+        color: #334155;
+    }
+
+    .password-row {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+    }
+
+    .validation-box {
+        margin: 0;
     }
 
     ul.validation-errors {
-        padding: 0.375rem 4rem;
-        margin-bottom: 0;
+        margin: 0;
+        padding: 0.75rem 1.5rem;
     }
 
-    p {
-        word-wrap: break-word;
-        margin-left: 10px;
-        margin-right: 10px;
-        flex-direction: column;
-        align-items: flex-start;
-        display: flex;
-        align-content: center;
-        flex-wrap: wrap;
+    .submit-row {
+        margin-top: 0.25rem;
+    }
+
+    .result-message {
+        margin-top: 1rem;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
     }
 </style>
 
-<div class="myForm">
-    <p>If you have been provided with a link to this page, you have been invited to a private partnership. To begin our relationship, we will send you a down-payment of up to 50% of your total.</p>
-    <p>Please follow these steps:</p>
-    <ol>
-        <li>Create a temporary username and password</li>
-        <li>Select the payment method you want to receive the money:
-            <ul>
-                <li><strong>Cash</strong> sent to you via FedEx or UPS (USPS mail is not allowed to send cash)</li>
-                <li><strong>CryptoCurrency</strong> (BTC, LTC or ETH only)</li>
-                <li><strong>Wire Transfer</strong></li>
-            </ul>
-        </li>
-        <li>On the partner page, enter your business name and the amount you would like to receive for down-payment</li>
-        <li>Complete the payment details, the amount will be <string>sent automatically within 2 hours</string>.</li>
-        <li>When your services are complete, come back here to receive payment for the remainder of the contract.</li>
-    </ol>
-</div>
+<div class="invite-page">
+    <section class="hero-card">
+        <h1 class="hero-title">Partnership Onboarding</h1>
+        <p class="hero-text">If you received this link, you have been invited to a private partnership. Complete the quick setup below to create your temporary account and select your preferred payment method.</p>
+    </section>
 
+    <div class="page-grid">
+        <article class="panel">
+            <h2 class="panel-title">Before You Continue</h2>
+            <ol class="steps-list">
+                <li>Create a temporary username and password.</li>
+                <li>
+                    Select the payment method you want to receive money:
+                    <ul>
+                        <li><strong>Cash</strong> sent via FedEx or UPS (USPS is not allowed to send cash).</li>
+                        <li><strong>Cryptocurrency</strong> (BTC, LTC, or ETH only).</li>
+                        <li><strong>Wire Transfer</strong>.</li>
+                    </ul>
+                </li>
+                <li>On the partner page, enter your business name and your requested down-payment amount.</li>
+                <li>Complete your payment details and the amount will be <strong>sent automatically within 2 hours</strong>.</li>
+                <li>When your services are complete, return here to receive the remainder of your contract payment.</li>
+            </ol>
+        </article>
 
-<br />
+        <section class="panel">
+            <h2 class="panel-title">Create Temporary Account</h2>
 
-<EditForm Model="@CredentialsModel" OnValidSubmit="@HandleValidSubmit" class="myForm">
-    <DataAnnotationsValidator />
-    
-    <div>
-        <label for="paymenttype">How would you like to receive your money:</label>
-        <div>
-            <TelerikDropDownList Data="@AvailablePaymentTypes"
-                                 @bind-Value="@CredentialsModel.DesiredPaymentType"
-                                 DefaultText="Select Payment Type"
-                                 Id="paymenttype"
-                                 Width="250px">
-                <DropDownListSettings>
-                    <DropDownListPopupSettings Height="auto"/>
-                </DropDownListSettings>
-            </TelerikDropDownList>
-            
-            @* @if (CredentialsModel.DesiredPaymentType is "BTC" or "LTC" or "ETH")
+            <EditForm Model="@CredentialsModel" OnValidSubmit="@HandleValidSubmit" class="form-stack">
+                <DataAnnotationsValidator />
+
+                <div class="field-group">
+                    <label for="paymenttype" class="field-label">How would you like to receive your money?</label>
+                    <TelerikDropDownList Data="@AvailablePaymentTypes"
+                                         @bind-Value="@CredentialsModel.DesiredPaymentType"
+                                         DefaultText="Select payment type"
+                                         Id="paymenttype"
+                                         Width="100%">
+                        <DropDownListSettings>
+                            <DropDownListPopupSettings Height="auto" />
+                        </DropDownListSettings>
+                    </TelerikDropDownList>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Username</label>
+                    <TelerikTextBox PlaceHolder="Create a username"
+                                    Width="100%"
+                                    @bind-Value="@CredentialsModel.Username" />
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Password</label>
+                    <div class="password-row">
+                        <TelerikTextBox PlaceHolder="Create password"
+                                        Password="HidePassword"
+                                        Width="100%"
+                                        @bind-Value="@CredentialsModel.Password" />
+                        <TelerikButton OnClick="@RevealPassword"
+                                       Icon="@SvgIcon.Unlock"
+                                       ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                                       ButtonType="ButtonType.Button" />
+                    </div>
+                </div>
+
+                <div class="k-validation-summary k-messagebox k-messagebox-error p-0 validation-box" role="alert">
+                    <ValidationSummary />
+                </div>
+
+                <div class="submit-row">
+                    <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
+                                   ButtonType="@ButtonType.Submit">Create Account</TelerikButton>
+                </div>
+            </EditForm>
+
+            @if (!string.IsNullOrWhiteSpace(ResultMessage))
             {
-                <TelerikTextBox @ref="WalletBox"
-                                PlaceHolder="Enter wallet address"
-                                Width="250px" />
-            } *@
-        </div>
+                <p class="k-messagebox-error result-message">@ResultMessage</p>
+            }
+        </section>
     </div>
-
-    <br />
-
-    <div>
-        <TelerikTextBox PlaceHolder="Create a username"
-                        Width="250px"
-                        @bind-Value="@CredentialsModel.Username"/>
-    </div>
-
-    <br />
-
-    <div>
-        <TelerikTextBox PlaceHolder="Create Password"
-                        Password="HidePassword"
-                        Width="250px"
-                        @bind-Value="@CredentialsModel.Password"/>
-        <TelerikButton OnClick="@RevealPassword"
-                       Icon="@SvgIcon.Unlock"
-                       ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
-                       ButtonType="ButtonType.Button"/>
-    </div>
-
-    <br />
-
-    <div class="k-validation-summary k-messagebox k-messagebox-error p-0" role="alert">
-        <ValidationSummary />
-    </div>
-
-    <br />
-
-    <div>
-        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"
-                       ButtonType="@ButtonType.Submit">Create Account</TelerikButton>
-    </div>
-</EditForm>
-
-<br />
-
-<p class="k-messagebox-error">@ResultMessage</p>
+</div>
 
 
 @code {

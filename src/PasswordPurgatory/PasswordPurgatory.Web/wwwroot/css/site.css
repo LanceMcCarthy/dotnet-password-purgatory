@@ -59,6 +59,47 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
+.app-header {
+  margin-bottom: 1.5rem;
+}
+
+.app-header-nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #1e3a8a;
+  background: linear-gradient(145deg, #0f172a 0%, #1d4ed8 100%);
+  box-shadow: 0 12px 24px -20px rgba(15, 23, 42, 0.8);
+}
+
+.app-header-inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.9rem 1rem;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.app-header-title {
+  display: inline-block;
+  color: #f8fafc !important;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.app-header-title:visited,
+.app-header-title.active,
+.app-header-title:hover,
+.app-header-title:focus {
+  color: #dbeafe !important;
+  text-decoration: none;
+}
+
 .footer {
   position: absolute;
   bottom: 0;
