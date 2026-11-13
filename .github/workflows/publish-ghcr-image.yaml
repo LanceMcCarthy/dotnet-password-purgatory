@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write # JWT for Akeyless
 
 env:
   CSPROJ_PATH: "src/PasswordPurgatory/PasswordPurgatory.Web/PasswordPurgatory.Web.csproj"
