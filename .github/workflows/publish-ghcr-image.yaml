@@ -18,8 +18,9 @@ env:
   CONTAINER_REGISTRY: 'ghcr.io'
 
 jobs:
-  publish-ghcr:
+  publish_ghcr:
     runs-on: ubuntu-latest
+    name: "Build and publish image"
     steps:
     - name: Checkout to the branch
       uses: actions/checkout@v6
@@ -64,7 +65,7 @@ jobs:
 
   update-production:
     name: "Update Production"
-    needs: build_and_publish
+    needs: publish_ghcr
     environment: production # has 1 minute wait timer, https://github.com/LanceMcCarthy/dvlup-blog/settings/environments
     runs-on: ubuntu-latest
     steps:
