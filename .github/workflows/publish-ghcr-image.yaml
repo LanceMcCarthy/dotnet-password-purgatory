@@ -21,7 +21,20 @@ jobs:
     name: "Build and publish image"
     steps:
     - name: Checkout to the branch
-      uses: actions/checkout@v7
+      uses: actions/checkout@v7    
+
+    # Using AKeyless for secrets in this demo, but you can use github Secrets instead
+    - name: "🔐 Fetch secrets from AKeyless"
+      id: akeyless
+      uses: LanceMcCarthy/akeyless-action@v5
+      with:
+        access-id: 'p-4blpeo5zdfeaom'
+        static-secrets: |
+          {
+            "/progress/DEPLOYMENT_KEY_PASSWORD_PURGATORY":"TK_DEPLOYMENT_KEY"
+          }
+        export-secrets-to-outputs: true
+        export-secrets-to-environment: false
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v6
@@ -42,13 +55,15 @@ jobs:
       run: |
         dotnet publish ${{env.CSPROJ_PATH}} \
           -t:PublishContainer \
-          -p:PublishProfile=DefaultContainer \
+          -p PublishProfile=DefaultContainer \
           -p ContainerRegistry=${{env.CONTAINER_REGISTRY}} \
           -p ContainerRepository="${{github.repository_owner}}/${{env.CONTAINER_NAME}}" \
           -p ContainerImageTags='"${{steps.tag-creator.outputs.VERSION_TAG}};latest"' \
           -p ContainerBaseImage='mcr.microsoft.com/dotnet/aspnet:10.0' \
           -p ContainerRuntimeIdentifiers='"linux-x64;linux-arm64"' \
           -p RuntimeIdentifiers='"linux-x64;linux-arm64"'
+      env:
+        TELERIK_LICENSE: ${{steps.akeyless.outputs.TK_DEPLOYMENT_KEY}}
 
     - name: "🗑️ Clean up old container versions"
       uses: actions/delete-package-versions@v5
